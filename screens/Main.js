@@ -16,18 +16,25 @@ import * as StatusBar from "expo-status-bar";
 import { RFPercentage, RFValue } from "react-native-responsive-fontsize";
 import Filter from "./Filter";
 
-const data = [
-  { id: 1, image: require("../assets/Frapp-00.png") },
-  { id: 2, image: require("../assets/Frapp-01.png") },
-  { id: 3, image: require("../assets/Frapp-02.png") },
-  { id: 4, image: require("../assets/Frapp-03.png") },
-  { id: 5, image: require("../assets/Frapp-04.png") },
-  { id: 6, image: require("../assets/Frapp-05.png") },
-  { id: 7, image: require("../assets/Frapp-06.png") },
-  { id: 8, image: require("../assets/Frapp-07.png") },
-  { id: 9, image: require("../assets/Frapp-08.png") },
-  { id: 10, image: require("../assets/Frapp-09.png") },
-];
+const data = {
+  regular: [{ id: 1, image: require("../assets/Frapp-00.png") }],
+  wayfarer: [
+    { id: 4, image: require("../assets/Frapp-03.png") },
+    { id: 5, image: require("../assets/Frapp-04.png") },
+  ],
+  rimless: [{ id: 10, image: require("../assets/Frapp-09.png") }],
+  round: [
+    { id: 2, image: require("../assets/Frapp-01.png") },
+    { id: 3, image: require("../assets/Frapp-02.png") },
+  ],
+  aviator: [
+    { id: 6, image: require("../assets/Frapp-05.png") },
+    { id: 7, image: require("../assets/Frapp-06.png") },
+    { id: 8, image: require("../assets/Frapp-07.png") },
+    { id: 9, image: require("../assets/Frapp-08.png") },
+  ],
+};
+const categories = Object.keys(data);
 
 class Main extends React.Component {
   constructor(props) {
@@ -36,6 +43,7 @@ class Main extends React.Component {
       hasCamPerms: null,
       faces: [],
       currentFilter: "Filter1",
+      selectedCategory: "aviator",
     };
   }
   componentDidMount() {
@@ -79,7 +87,6 @@ class Main extends React.Component {
             </Text>
           </View>
         </View>
-
         <View style={styles.cameraStyle}>
           <Camera
             style={{
@@ -94,8 +101,8 @@ class Main extends React.Component {
             onFacesDetected={this.onFacesDetected}
             onFacesDetectionError={this.onFaceDetectionError}
           />
-          {}
-          {/* <View style={styles.framesContainer}></View> */}
+        </View>
+        <View style={styles.framesContainer}>
           {this.state.faces.map((face) => {
             if (this.state.currentFilter === "Filter1") {
               return <Filter image={data[0]} key={face.faceId} face={face} />;
@@ -120,6 +127,21 @@ class Main extends React.Component {
             }
           })}
         </View>
+        <View style={styles.categoryContainer}>
+          {categories.map((cat, i) => (
+            <TouchableOpacity
+              key={i}
+              style={
+                this.state.selectedCategory === cat
+                  ? styles.categoryBoxSelected
+                  : styles.categoryBox
+              }
+              onPress={() => this.setState({ selectedCategory: cat })}
+            >
+              <Text>{cat.toUpperCase()}</Text>
+            </TouchableOpacity>
+          ))}
+        </View>
         <View style={styles.framesContainer}>
           <ScrollView
             style={{
@@ -128,7 +150,7 @@ class Main extends React.Component {
             horizontal
             showsHorizontalScrollIndicator={false}
           >
-            {data.map((filterData) => {
+            {data[this.state.selectedCategory].map((filterData) => {
               return (
                 <TouchableOpacity
                   key={filterData.id}
@@ -154,6 +176,96 @@ class Main extends React.Component {
 }
 
 export default Main;
+// const styles = StyleSheet.create({
+//   container: { flex: 1 },
+//   droidSafeArea: {
+//     marginTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
+//   },
+//   headingContainer: {
+//     flex: 0.15,
+//     alignItems: "center",
+//     justifyContent: "center",
+//     backgroundColor: "#6278e4",
+//   },
+//   titleText1: {
+//     fontSize: RFValue(30),
+//     fontWeight: "bold",
+//     color: "#efb141",
+//     fontStyle: "italic",
+//     textShadowColor: "rgba(0, 0, 0, 0.75)",
+//     textShadowOffset: { width: -3, height: 3 },
+//     textShadowRadius: 1,
+//   },
+//   titleText2: {
+//     fontSize: RFValue(30),
+//     fontWeight: "bold",
+//     color: "white",
+//     fontStyle: "italic",
+//     textShadowColor: "rgba(0, 0, 0, 0.75)",
+//     textShadowOffset: { width: -3, height: 3 },
+//     textShadowRadius: 1,
+//   },
+//   subheading1: {
+//     fontSize: RFValue(20),
+//     color: "#efb141",
+//     fontStyle: "italic",
+//     textShadowColor: "rgba(0, 0, 0, 0.75)",
+//     textShadowOffset: { width: -3, height: 3 },
+//     textShadowRadius: 1,
+//   },
+//   subheading2: {
+//     fontSize: RFValue(20),
+//     color: "white",
+//     fontStyle: "italic",
+//     textShadowColor: "rgba(0, 0, 0, 0.75)",
+//     textShadowOffset: { width: -3, height: 3 },
+//     textShadowRadius: 1,
+//   },
+//   cameraStyle: { flex: 0.65 },
+//   framesContainer: {
+//     flex: 0.2,
+//     paddingLeft: RFValue(20),
+//     paddingRight: RFValue(20),
+//     paddingTop: RFValue(30),
+//     backgroundColor: "#6278e4",
+//   },
+//   filterImageContainer: {
+//     height: RFPercentage(8),
+//     width: RFPercentage(15),
+//     justifyContent: "center",
+//     alignItems: "center",
+//     backgroundColor: "#e4e7f8",
+//     borderRadius: 30,
+//     marginRight: 20,
+//   },
+//   categoryContainer: {
+//     flex: 0.4,
+//     justifyContent: "center",
+//     alignItems: "center",
+//     flexDirection: "row",
+//     marginBottom: RFValue(10),
+//   },
+//   categoryBox: {
+//     flex: 0.2,
+//     borderRadius: 30,
+//     borderWidth: 1,
+//     backgroundColor: "white",
+//     width: "100%",
+//     padding: RFValue(3),
+//     margin: 1,
+//     alignItems: "center",
+//   },
+//   categoryBoxSelected: {
+//     flex: 0.2,
+//     borderRadius: 30,
+//     borderWidth: 1,
+//     backgroundColor: "#efb141",
+//     width: "100%",
+//     padding: RFValue(3),
+//     margin: 1,
+//     alignItems: "center",
+//   },
+// });
 const styles = StyleSheet.create({
   container: { flex: 1 },
   droidSafeArea: {
@@ -204,7 +316,7 @@ const styles = StyleSheet.create({
     flex: 0.2,
     paddingLeft: RFValue(20),
     paddingRight: RFValue(20),
-    paddingTop: RFValue(30),
+    paddingTop: RFValue(10),
     backgroundColor: "#6278e4",
   },
   filterImageContainer: {
@@ -215,5 +327,12 @@ const styles = StyleSheet.create({
     backgroundColor: "#e4e7f8",
     borderRadius: 30,
     marginRight: 20,
+  },
+  categoryContainer: {
+    flex: 0.4,
+    justifyContent: "center",
+    alignItems: "center",
+    flexDirection: "row",
+    marginBottom: RFValue(10),
   },
 });
