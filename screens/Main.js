@@ -34,7 +34,7 @@ const data = {
     { id: 9, image: require("../assets/Frapp-08.png") },
   ],
 };
-const categories = Object.keys(data);
+const categories = ["regular", "wayfarer", "rimless", "round", "aviator"];
 
 class Main extends React.Component {
   constructor(props) {
@@ -74,7 +74,7 @@ class Main extends React.Component {
     }
     return (
       <View style={styles.container}>
-        <SafeAreaView style={styles.droidSafeArea} />
+        {/* <SafeAreaView style={styles.droidSafeArea} /> */}
         <View style={styles.headingContainer}>
           <View style={{ flexDirection: "row", flexWrap: "wrap" }}>
             <Text style={styles.titleText1}>FR</Text>
@@ -269,7 +269,7 @@ export default Main;
 const styles = StyleSheet.create({
   container: { flex: 1 },
   droidSafeArea: {
-    marginTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
+    // marginTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
   },
   headingContainer: {
     flex: 0.15,
